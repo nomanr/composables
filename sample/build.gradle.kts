@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
 }
 android {
     namespace = "com.nomanr.compose.components"
@@ -45,11 +44,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":composables:slider"))
+
     implementation(libs.androidx.corektx)
     implementation(libs.androidx.appcompat)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(project(":components:slider"))
 }

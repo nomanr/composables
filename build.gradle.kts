@@ -1,3 +1,16 @@
+import java.util.Properties
+import java.io.File
+
+fun getLocalProperty(key: String): String? {
+    val properties = Properties()
+    val localProperties = File(rootDir, "local.properties")
+    if (localProperties.isFile) {
+        properties.load(localProperties.inputStream())
+        return properties.getProperty(key)
+    }
+    return null
+}
+
 val spotlessPluginId = libs.plugins.spotless.get().pluginId
 val ktlintVersion = libs.versions.ktlint.get()
 
@@ -5,17 +18,18 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-
     }
 }
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.ksp) apply false
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.spotless) apply false
+    alias(libs.plugins.vanniktech.maven.publish) apply false
 }
+
 
 subprojects {
     apply {
@@ -37,9 +51,7 @@ subprojects {
             )
         }
     }
-
 }
-
 
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -47,7 +59,14 @@ allprojects {
             freeCompilerArgs += listOf("-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api")
         }
     }
-
-
 }
 
+//nexusPublishing {
+//    repositories {
+//        sonatype {
+//            nexusUrl.set(uri("https://central.sonatype.com/api/v1/publisher/"))
+//            username.set(findProperty("sonatype.username") as String? ?: System.getenv("OSSRH_USERNAME"))
+//            password.set(findProperty("sonatype.password") as String? ?: System.getenv("OSSRH_PASSWORD"))
+//        }
+//    }
+//}

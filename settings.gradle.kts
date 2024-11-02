@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -19,7 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "compose-components"
+rootProject.name = "composables"
 include(":sample")
-include(":components:slider")
-include(":components:internal")
+include(":composables:slider")
+include(":composables:internal")
