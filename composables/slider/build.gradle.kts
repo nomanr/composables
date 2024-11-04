@@ -4,6 +4,10 @@ plugins {
     id(libs.plugins.app.publishing.plugin.get().pluginId)
 }
 
+publishingPlugin{
+    publishVersion = "0.0.2"
+}
+
 android {
     namespace = "com.nomanr.components.slider"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -37,6 +41,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":composables:internal"))
+    embed(project(":composables:internal", configuration = "default"))
+//    embed
 }
 

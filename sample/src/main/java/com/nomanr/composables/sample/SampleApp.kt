@@ -1,4 +1,4 @@
-package com.nomanr.composeables.sample
+package com.nomanr.composables.sample
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,7 +8,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nomanr.compose.sample.ui.samples.SliderSample
+import com.nomanr.composables.sample.samples.SliderSample
 
 sealed class Screen {
     data object SampleList : Screen()

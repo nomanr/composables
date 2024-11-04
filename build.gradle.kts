@@ -18,6 +18,10 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+
+    }
+    dependencies {
+        classpath(libs.fatarr)
     }
 }
 
@@ -61,12 +65,3 @@ allprojects {
     }
 }
 
-//nexusPublishing {
-//    repositories {
-//        sonatype {
-//            nexusUrl.set(uri("https://central.sonatype.com/api/v1/publisher/"))
-//            username.set(findProperty("sonatype.username") as String? ?: System.getenv("OSSRH_USERNAME"))
-//            password.set(findProperty("sonatype.password") as String? ?: System.getenv("OSSRH_PASSWORD"))
-//        }
-//    }
-//}

@@ -21,7 +21,7 @@ org-jetbrains-kotlin-jvm = "1.9.20"
 
 vanniktech-maven-publish = "0.30.0"
 
-secrets = "2.0.1"
+fatarr = "1.4.1"
 
 spotless = "5.15.0"
 
@@ -41,6 +41,7 @@ androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling
 # For build-logic dependencies
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
 vanniktech-gradle-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "vanniktech-maven-publish" }
+fatarr = {group = "com.github.aasitnikov", name = "fat-aar-android", version.ref = "fatarr" }
 
 
 [plugins]

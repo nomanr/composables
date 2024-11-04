@@ -23,6 +23,7 @@ open class PublishingPluginExtension {
 class PublishingPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply("com.vanniktech.maven.publish")
+        project.plugins.apply("com.kezong.fat-aar")
 
         val extension = project.extensions.create<PublishingPluginExtension>("publishingPlugin")
 

@@ -1,4 +1,4 @@
-package com.nomanr.composeables.sample
+package com.nomanr.composables.sample
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider

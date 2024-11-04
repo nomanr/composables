@@ -1,4 +1,4 @@
-package com.nomanr.compose.sample.ui.samples
+package com.nomanr.composables.sample.samples
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.nomanr.composables.slider.RangeSlider
 import com.nomanr.composables.slider.Slider
 import com.nomanr.composables.slider.SliderColors
-import com.nomanr.composeables.sample.AppTheme
+import com.nomanr.composables.sample.AppTheme
 
 private object SliderPresets {
     val Variant1 = SliderColors(

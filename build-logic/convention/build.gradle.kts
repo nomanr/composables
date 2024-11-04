@@ -11,6 +11,7 @@ java {
 dependencies {
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.vanniktech.gradle.plugin)
+
 }
 
 tasks {

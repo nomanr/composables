@@ -1,4 +1,4 @@
-package com.nomanr.composeables.sample
+package com.nomanr.composables.sample
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
