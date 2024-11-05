@@ -104,7 +104,7 @@ private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation
     }
 }
 
-fun ViewConfiguration.pointerSlop(pointerType: PointerType): Float {
+internal fun ViewConfiguration.pointerSlop(pointerType: PointerType): Float {
     return when (pointerType) {
         PointerType.Mouse -> touchSlop * mouseToTouchSlopRatio
         else -> touchSlop

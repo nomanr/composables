@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.nomanr.composables.sample.AppTheme
 import com.nomanr.composables.slider.RangeSlider
 import com.nomanr.composables.slider.Slider
 import com.nomanr.composables.slider.SliderColors
-import com.nomanr.composables.sample.AppTheme
 
 private object SliderPresets {
     val Variant1 = SliderColors(

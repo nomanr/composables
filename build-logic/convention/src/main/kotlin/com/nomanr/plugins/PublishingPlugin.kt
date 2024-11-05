@@ -11,9 +11,9 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 
 open class PublishingPluginExtension {
-    var publishGroupId: String = "com.nomanr.composables"
+    var publishGroupId: String = "com.nomanr"
     var publishVersion: String = "0.0.1"
-    var artifactId: String = ""
+    var artifactId: String = "composables"
     var githubUrl: String = "github.com/nomanr/composables"
     var developerId: String = "nomanr"
     var developerName: String = "Noman R"
@@ -23,7 +23,6 @@ open class PublishingPluginExtension {
 class PublishingPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply("com.vanniktech.maven.publish")
-        project.plugins.apply("com.kezong.fat-aar")
 
         val extension = project.extensions.create<PublishingPluginExtension>("publishingPlugin")
 

@@ -24,8 +24,6 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/composables" />
-            <option value="$PROJECT_DIR$/composables/internal" />
-            <option value="$PROJECT_DIR$/composables/slider" />
             <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>

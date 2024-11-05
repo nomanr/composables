@@ -34,7 +34,7 @@ import kotlin.math.roundToInt
  * sure there is adequate space for touch target expansion.
  */
 @Stable
-fun Modifier.minimumInteractiveComponentSize(): Modifier = this then MinimumInteractiveModifier
+internal fun Modifier.minimumInteractiveComponentSize(): Modifier = this then MinimumInteractiveModifier
 
 internal object MinimumInteractiveModifier : ModifierNodeElement<MinimumInteractiveModifierNode>() {
 

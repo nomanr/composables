@@ -11,12 +11,6 @@ pluginManagement {
 
         mavenCentral()
         gradlePluginPortal()
-        maven {
-            setUrl("https://jitpack.io")
-            content {
-                includeGroup("com.github.aasitnikov")
-            }
-        }
     }
 }
 dependencyResolutionManagement {
@@ -29,5 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "composables"
 include(":sample")
-include(":composables:slider")
-include(":composables:internal")
+include(":composables")

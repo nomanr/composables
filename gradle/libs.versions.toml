@@ -8,6 +8,7 @@ compose-compiler = "1.5.15"
 
 androidx-compose-bom = "2024.10.01"
 androidx-activity-compose = "1.9.3"
+androidx-activity-ktx = "1.9.3"
 
 androidx-appcompat = "1.7.0"
 androidx-corektx = "1.15.0"
@@ -21,9 +22,11 @@ org-jetbrains-kotlin-jvm = "1.9.20"
 
 vanniktech-maven-publish = "0.30.0"
 
-fatarr = "1.4.1"
-
 spotless = "5.15.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+material = "1.12.0"
 
 
 
@@ -32,6 +35,7 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-corektx = { module = "androidx.core:core-ktx", version.ref = "androidx-corektx" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity-ktx" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -41,7 +45,10 @@ androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling
 # For build-logic dependencies
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
 vanniktech-gradle-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "vanniktech-maven-publish" }
-fatarr = {group = "com.github.aasitnikov", name = "fat-aar-android", version.ref = "fatarr" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 
 [plugins]

@@ -20,9 +20,6 @@ buildscript {
         mavenCentral()
 
     }
-    dependencies {
-        classpath(libs.fatarr)
-    }
 }
 
 plugins {

@@ -8,9 +8,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 
-val HorizontalSemanticsBoundsPadding: Dp = 10.dp
+internal val HorizontalSemanticsBoundsPadding: Dp = 10.dp
 
-val IncreaseHorizontalSemanticsBounds: Modifier =
+internal val IncreaseHorizontalSemanticsBounds: Modifier =
     Modifier
         .layout { measurable, constraints ->
             val paddingPx = HorizontalSemanticsBoundsPadding.roundToPx()

@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":composables:slider"))
+    implementation(project(":composables"))
 
     implementation(libs.androidx.corektx)
     implementation(libs.androidx.appcompat)

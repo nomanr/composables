@@ -5,11 +5,11 @@ plugins {
 }
 
 publishingPlugin{
-    publishVersion = "0.0.2"
+    publishVersion = "0.0.1-alpha"
 }
 
 android {
-    namespace = "com.nomanr.components.slider"
+    namespace = "com.nomanr.composables"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -41,7 +41,9 @@ android {
 }
 
 dependencies {
-    embed(project(":composables:internal", configuration = "default"))
-//    embed
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.activity.compose)
 }
 
