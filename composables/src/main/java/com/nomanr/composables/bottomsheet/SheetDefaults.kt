@@ -7,20 +7,16 @@ import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -32,14 +28,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.nomanr.composables.internal.AnchoredDraggableState
-import com.nomanr.composables.internal.DraggableAnchors
 import com.nomanr.composables.internal.animateTo
 import com.nomanr.composables.internal.snapTo
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CancellationException
 
 /**
- * State of a sheet composable, such as [ModalBottomSheet]
+ * State of a sheet composable, such as [BasicModalBottomSheet]
  *
  * Contains states relating to its swipe position as well as animations between state values.
  *

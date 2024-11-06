@@ -4,7 +4,6 @@ package com.nomanr.composables.bottomsheet
 import android.content.Context
 import android.graphics.Outline
 import android.os.Build
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.MotionEvent
 import android.view.View
@@ -32,7 +31,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,7 +59,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.isSpecified
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.AbstractComposeView
@@ -107,7 +104,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
-fun ModalBottomSheet(
+fun BasicModalBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
@@ -767,7 +764,7 @@ internal fun View.isFlagSecureEnabled(): Boolean {
 
 
 /**
- * Create and [remember] a [SheetState] for [ModalBottomSheet].
+ * Create and [remember] a [SheetState] for [BasicModalBottomSheet].
  *
  * @param skipPartiallyExpanded Whether the partially expanded state, if the sheet is tall enough,
  *   should be skipped. If true, the sheet will always expand to the [Expanded] state and move to
@@ -858,10 +855,6 @@ internal fun Modifier.verticalScaleDown(state: SheetState) = graphicsLayer {
     transformOrigin = TransformOrigin(pivotFractionX = 0.5f, pivotFractionY = 0f)
 }
 
-/** Determines if a color should be considered light or dark. */
-internal fun Color.isDark(): Boolean {
-    return this != Color.Transparent && luminance() <= 0.5
-}
 
 private val PredictiveBackMaxScaleXDistance = 48.dp
 private val PredictiveBackMaxScaleYDistance = 24.dp

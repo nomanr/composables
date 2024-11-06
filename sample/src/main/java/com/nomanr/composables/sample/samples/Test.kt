@@ -1,4 +1,3 @@
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.nomanr.composables.bottomsheet.ModalBottomSheet
+import com.nomanr.composables.bottomsheet.BasicModalBottomSheet
 import com.nomanr.composables.bottomsheet.rememberModalBottomSheetState
 
 @Composable
@@ -31,7 +30,7 @@ fun BottomSheetSample() {
         }
 
         if (showSheet) {
-            ModalBottomSheet(onDismissRequest = { showSheet = false },
+            BasicModalBottomSheet(onDismissRequest = { showSheet = false },
                 sheetState = sheetState,
                 containerColor = Color.White,
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
