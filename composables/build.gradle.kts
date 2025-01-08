@@ -6,7 +6,7 @@ plugins {
 }
 
 publishingPlugin{
-    publishVersion = "0.0.1-alpha.12"
+    publishVersion = "1.0.0"
 }
 
 android {
