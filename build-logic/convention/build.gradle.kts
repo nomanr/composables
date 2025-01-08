@@ -8,6 +8,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.vanniktech.gradle.plugin)

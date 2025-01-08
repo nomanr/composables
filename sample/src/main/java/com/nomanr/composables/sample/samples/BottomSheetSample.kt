@@ -35,6 +35,7 @@ fun BottomSheetSample() {
                 containerColor = Color.White,
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 dragHandle = { DragHandle() }) {
+
                 Column(
                     Modifier
                         .fillMaxWidth()

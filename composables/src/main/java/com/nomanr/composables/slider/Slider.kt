@@ -104,7 +104,7 @@ fun BasicSlider(
     trackHeight: Dp = TrackHeight,
     thumbWidth: Dp = ThumbWidth,
     thumbHeight: Dp = ThumbHeight,
-    thumbSizeOnPress: DpSize = DpSize(thumbWidth, thumbHeight),
+    thumbSizeOnPress: DpSize = ThumbSizeOnPress,
     trackInsideCornerSize: Dp = TrackInsideCornerSize,
     thumbTrackGap: Dp = ThumbTrackGap,
     trackTickSize: Dp = TrackTickSize,
@@ -152,15 +152,15 @@ fun BasicRangeSlider(
     state: RangeSliderState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    colors: SliderColors,
     trackHeight: Dp = TrackHeight,
     thumbWidth: Dp = ThumbWidth,
     thumbHeight: Dp = ThumbHeight,
-    thumbSizeOnPress: DpSize = DpSize(thumbWidth, thumbHeight),
+    thumbSizeOnPress: DpSize = ThumbSizeOnPress,
     trackInsideCornerSize: Dp = TrackInsideCornerSize,
     thumbTrackGap: Dp = ThumbTrackGap,
     trackTickSize: Dp = TrackTickSize,
     thumbShape: Shape = ThumbShape,
-    colors: SliderColors,
     startInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     endInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     startThumb: @Composable (RangeSliderState) -> Unit = {
@@ -238,14 +238,12 @@ private fun SliderComponent(
 
     Layout(
         {
-            Box(
-                modifier = Modifier
-                    .layoutId(SliderComponents.THUMB)
-                    .wrapContentWidth()
-                    .onSizeChanged {
-                        state.thumbWidth = it.width.toFloat()
-                    }
-            ) {
+            Box(modifier = Modifier
+                .layoutId(SliderComponents.THUMB)
+                .wrapContentWidth()
+                .onSizeChanged {
+                    state.thumbWidth = it.width.toFloat()
+                }) {
                 thumb(state)
             }
             Box(modifier = Modifier.layoutId(SliderComponents.TRACK)) { track(state) }
@@ -304,30 +302,26 @@ private fun RangeSliderComponent(
 
     Layout(
         {
-            Box(
-                modifier = Modifier
-                    .layoutId(RangeSliderComponents.STARTTHUMB)
-                    .wrapContentWidth()
-                    .onSizeChanged { state.startThumbWidth = it.width.toFloat() }
-                    .rangeSliderStartThumbSemantics(state, enabled)
-                    .semantics(mergeDescendants = true) {
-                        contentDescription = "Slider Range Start"
-                    }
-                    .focusable(enabled, startInteractionSource)
-            ) {
+            Box(modifier = Modifier
+                .layoutId(RangeSliderComponents.STARTTHUMB)
+                .wrapContentWidth()
+                .onSizeChanged { state.startThumbWidth = it.width.toFloat() }
+                .rangeSliderStartThumbSemantics(state, enabled)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Slider Range Start"
+                }
+                .focusable(enabled, startInteractionSource)) {
                 startThumb(state)
             }
-            Box(
-                modifier = Modifier
-                    .layoutId(RangeSliderComponents.ENDTHUMB)
-                    .wrapContentWidth()
-                    .onSizeChanged { state.endThumbWidth = it.width.toFloat() }
-                    .rangeSliderEndThumbSemantics(state, enabled)
-                    .semantics(mergeDescendants = true) {
-                        contentDescription = "Slider Range End"
-                    }
-                    .focusable(enabled, endInteractionSource)
-            ) {
+            Box(modifier = Modifier
+                .layoutId(RangeSliderComponents.ENDTHUMB)
+                .wrapContentWidth()
+                .onSizeChanged { state.endThumbWidth = it.width.toFloat() }
+                .rangeSliderEndThumbSemantics(state, enabled)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Slider Range End"
+                }
+                .focusable(enabled, endInteractionSource)) {
                 endThumb(state)
             }
             Box(modifier = Modifier.layoutId(RangeSliderComponents.TRACK)) { track(state) }
@@ -374,8 +368,7 @@ private fun RangeSliderComponent(
 }
 
 private fun Modifier.rangeSliderStartThumbSemantics(
-    state: RangeSliderState,
-    enabled: Boolean
+    state: RangeSliderState, enabled: Boolean
 ): Modifier {
     val valueRange = state.valueRange.start..state.activeRangeEnd
 
@@ -512,6 +505,9 @@ private fun Modifier.slideOnKeyEvents(
 }
 
 private object SliderDefaults {
+    @Composable
+    fun sliderStyle() = SliderStyle()
+
     @Composable
     fun Thumb(
         interactionSource: MutableInteractionSource,
@@ -726,11 +722,7 @@ private object SliderDefaults {
     }
 
     private fun DrawScope.drawTrackPath(
-        offset: Offset,
-        size: Size,
-        color: Color,
-        startCornerRadius: Float,
-        endCornerRadius: Float
+        offset: Offset, size: Size, color: Color, startCornerRadius: Float, endCornerRadius: Float
     ) {
         val startCorner = CornerRadius(startCornerRadius, startCornerRadius)
         val endCorner = CornerRadius(endCornerRadius, endCornerRadius)
@@ -754,8 +746,7 @@ private object SliderDefaults {
 }
 
 private fun Modifier.rangeSliderEndThumbSemantics(
-    state: RangeSliderState,
-    enabled: Boolean
+    state: RangeSliderState, enabled: Boolean
 ): Modifier {
     val valueRange = state.activeRangeStart..state.valueRange.endInclusive
 
@@ -807,9 +798,7 @@ private fun Modifier.rangeSliderEndThumbSemantics(
 
 @Stable
 private fun Modifier.sliderTapModifier(
-    state: SliderState,
-    interactionSource: MutableInteractionSource,
-    enabled: Boolean
+    state: SliderState, interactionSource: MutableInteractionSource, enabled: Boolean
 ) = if (enabled) {
     pointerInput(state, interactionSource) {
         detectTapGestures(onPress = { state.onPress(it) }, onTap = {
@@ -899,10 +888,7 @@ private class RangeSliderLogic(
     }
 
     fun captureThumb(
-        draggingStart: Boolean,
-        posX: Float,
-        interaction: Interaction,
-        scope: CoroutineScope
+        draggingStart: Boolean, posX: Float, interaction: Interaction, scope: CoroutineScope
     ) {
         state.onDrag(
             draggingStart, posX - if (draggingStart) state.rawOffsetStart else state.rawOffsetEnd
@@ -957,17 +943,13 @@ private fun Modifier.sliderSemantics(state: SliderState, enabled: Boolean): Modi
 }
 
 private fun snapValueToTick(
-    current: Float,
-    tickFractions: FloatArray,
-    minPx: Float,
-    maxPx: Float
+    current: Float, tickFractions: FloatArray, minPx: Float, maxPx: Float
 ): Float {
     return tickFractions.minByOrNull { abs(lerp(minPx, maxPx, it) - current) }?.run { lerp(minPx, maxPx, this) } ?: current
 }
 
 private suspend fun AwaitPointerEventScope.awaitSlop(
-    id: PointerId,
-    type: PointerType
+    id: PointerId, type: PointerType
 ): Pair<PointerInputChange, Float>? {
     var initialDelta = 0f
     val postPointerSlop = { pointerInput: PointerInputChange, offset: Float ->
@@ -991,6 +973,18 @@ private fun scale(a1: Float, b1: Float, x: SliderRange, a2: Float, b2: Float) =
 
 // Calculate the 0..1 fraction that `pos` value represents between `a` and `b`
 private fun calcFraction(a: Float, b: Float, pos: Float) = (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
+
+@Immutable
+data class SliderStyle(
+    val trackHeight: Dp = TrackHeight,
+    val thumbWidth: Dp = ThumbWidth,
+    val thumbHeight: Dp = ThumbHeight,
+    val thumbSizeOnPress: DpSize = ThumbSizeOnPress,
+    val trackInsideCornerSize: Dp = TrackInsideCornerSize,
+    val thumbTrackGap: Dp = ThumbTrackGap,
+    val trackTickSize: Dp = TrackTickSize,
+    val thumbShape: Shape = ThumbShape
+)
 
 @Immutable
 class SliderColors(
@@ -1084,10 +1078,12 @@ class SliderState(
     value: Float = 0f,
     @IntRange(from = 0) val steps: Int = 0,
     var onValueChangeFinished: (() -> Unit)? = null,
-    val valueRange: ClosedFloatingPointRange<Float> = 0f..1f
+    val valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
 ) : DraggableState {
 
     private var valueState by mutableFloatStateOf(value)
+
+    var onValueChange: ((Float) -> Unit)? = null
 
     var value: Float
         set(newVal) {
@@ -1100,8 +1096,7 @@ class SliderState(
         get() = valueState
 
     override suspend fun drag(
-        dragPriority: MutatePriority,
-        block: suspend DragScope.() -> Unit
+        dragPriority: MutatePriority, block: suspend DragScope.() -> Unit
     ): Unit = coroutineScope {
         isDragging = true
         scrollMutex.mutateWith(dragScope, dragPriority, block)
@@ -1123,8 +1118,6 @@ class SliderState(
             }
         }
     }
-
-    internal var onValueChange: ((Float) -> Unit)? = null
 
     internal val tickFractions = stepsToTickFractions(steps)
     private var totalWidth by mutableIntStateOf(0)
@@ -1177,10 +1170,12 @@ class RangeSliderState(
     activeRangeEnd: Float = 1f,
     @IntRange(from = 0) val steps: Int = 0,
     var onValueChangeFinished: (() -> Unit)? = null,
-    val valueRange: ClosedFloatingPointRange<Float> = 0f..1f
+    val valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
 ) {
     private var activeRangeStartState by mutableFloatStateOf(activeRangeStart)
     private var activeRangeEndState by mutableFloatStateOf(activeRangeEnd)
+
+    var onValueChange: ((SliderRange) -> Unit)? = null
 
     var activeRangeStart: Float
         set(newVal) {
@@ -1201,8 +1196,6 @@ class RangeSliderState(
             activeRangeEndState = snappedValue
         }
         get() = activeRangeEndState
-
-    internal var onValueChange: ((SliderRange) -> Unit)? = null
 
     internal val tickFractions = stepsToTickFractions(steps)
 
@@ -1281,7 +1274,7 @@ class RangeSliderState(
 
 @Immutable
 @JvmInline
-internal value class SliderRange(val packedValue: Long) {
+value class SliderRange(val packedValue: Long) {
     @Stable
     val start: Float
         get() {

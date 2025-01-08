@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id(libs.plugins.app.publishing.plugin.get().pluginId)
+    alias(libs.plugins.compose.compiler)
 }
 
 publishingPlugin{
-    publishVersion = "0.0.1-alpha.2"
+    publishVersion = "0.0.1-alpha.12"
 }
 
 android {
@@ -31,12 +32,12 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 

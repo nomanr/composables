@@ -18,7 +18,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-
     }
 }
 
@@ -29,6 +28,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.spotless) apply false
     alias(libs.plugins.vanniktech.maven.publish) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 
@@ -43,11 +43,11 @@ subprojects {
             targetExclude("${layout.buildDirectory}/**/*.kt")
             targetExclude("bin/**/*.kt")
 
-            ktlint(ktlintVersion).userData(
+            ktlint("0.41.0").editorConfigOverride(
                 mapOf(
-                    "android" to "true",
-                    "disabled_rules" to "no-wildcard-imports",
-                    "max_line_length" to "off"
+                    "ktlint_standard_no-wildcard-imports" to "disabled",
+                    "ktlint_standard_max-line-length" to "100",
+                    "android" to "true"
                 )
             )
         }
