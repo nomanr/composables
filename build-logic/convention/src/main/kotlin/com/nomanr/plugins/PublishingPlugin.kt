@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.getByType
 
 open class PublishingPluginExtension {
     var publishGroupId: String = "com.nomanr"
-    var publishVersion: String = "0.0.1"
+    var publishVersion: String = "1.0.0"
     var artifactId: String = "composables"
     var githubUrl: String = "github.com/nomanr/composables"
     var developerId: String = "nomanr"
