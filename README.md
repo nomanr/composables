@@ -1,6 +1,6 @@
 # Composables
 
-A collection of composable components used in lumo.nomanr.com.
+A collection of composable components used in [lumo.nomanr.com](https://lumo.nomanr.com).
 
 ## Installation
 
