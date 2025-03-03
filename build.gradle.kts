@@ -29,6 +29,8 @@ plugins {
     alias(libs.plugins.spotless) apply false
     alias(libs.plugins.vanniktech.maven.publish) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.compose.multiplatform) apply false
 }
 
 
@@ -56,8 +58,8 @@ subprojects {
 
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        kotlinOptions {
-            freeCompilerArgs += listOf("-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api")
+        compilerOptions {
+            freeCompilerArgs = listOf("-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api")
         }
     }
 }
