@@ -1,6 +1,6 @@
 # Composables
 
-A collection of composable components used in [lumo.nomanr.com](https://lumo.nomanr.com).
+A collection of composable components used in [lumoui.com](https://lumoui.com).
 
 ## Installation
 
@@ -16,8 +16,8 @@ dependencies {
 
 | Component          | Sample                                                                                                                                             | Demo                                                                                |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Modal Bottom Sheet | [Sample](https://github.com/nomanr/lumo-ui/blob/main/sample/catalogue/src/main/java/com/nomanr/sample/ui/sample/samples/ModalBottomSheetSample.kt) | [lumo.nomanr.com/modal-bottomsheet](https://lumo.nomanr.com/modal-bottomsheet/demo) |
-| Slider             | [Sample](https://github.com/nomanr/lumo-ui/blob/main/sample/catalogue/src/main/java/com/nomanr/sample/ui/sample/samples/SliderSample.kt)           | [lumo.nomanr.com/slider](https://lumo.nomanr.com/slider/demo)                       |
+| Modal Bottom Sheet | [Sample](https://github.com/nomanr/lumo-ui/blob/main/sample/catalogue/src/main/java/com/nomanr/sample/ui/sample/samples/ModalBottomSheetSample.kt) | [lumo.nomanr.com/modal-bottomsheet](https://lumoui.com/modal-bottomsheet/demo) |
+| Slider             | [Sample](https://github.com/nomanr/lumo-ui/blob/main/sample/catalogue/src/main/java/com/nomanr/sample/ui/sample/samples/SliderSample.kt)           | [lumo.nomanr.com/slider](https://lumoui.com/slider/demo)                       |
 
 ## License
 
