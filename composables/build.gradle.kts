@@ -10,7 +10,7 @@ plugins {
 }
 
 publishingPlugin {
-    publishVersion = "1.1.0"
+    publishVersion = "1.1.1"
 }
 
 kotlin {
