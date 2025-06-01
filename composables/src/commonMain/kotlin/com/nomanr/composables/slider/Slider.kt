@@ -110,6 +110,7 @@ fun BasicSlider(
     thumbTrackGap: Dp = ThumbTrackGap,
     trackTickSize: Dp = TrackTickSize,
     thumbShape: Shape = ThumbShape,
+    onlyThumbDraggable: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     thumb: @Composable (SliderState) -> Unit = {
         SliderDefaults.Thumb(
@@ -142,6 +143,7 @@ fun BasicSlider(
         enabled = enabled,
         thumbWidth = thumbWidth,
         trackHeight = trackHeight,
+        onlyThumbDraggable = onlyThumbDraggable,
         interactionSource = interactionSource,
         thumb = thumb,
         track = track
@@ -223,12 +225,13 @@ private fun SliderComponent(
     thumbWidth: Dp,
     trackHeight: Dp,
     enabled: Boolean,
+    onlyThumbDraggable: Boolean,
     interactionSource: MutableInteractionSource,
     thumb: @Composable (SliderState) -> Unit,
     track: @Composable (SliderState) -> Unit
 ) {
     state.isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    val press = Modifier.sliderTapModifier(state, interactionSource, enabled)
+    val press = if (onlyThumbDraggable) Modifier else Modifier.sliderTapModifier(state, interactionSource, enabled)
     val drag = Modifier.draggable(
         orientation = Orientation.Horizontal,
         reverseDirection = state.isRtl,
