@@ -232,15 +232,19 @@ private fun SliderComponent(
 ) {
     state.isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val press = if (onlyThumbDraggable) Modifier else Modifier.sliderTapModifier(state, interactionSource, enabled)
-    val drag = Modifier.draggable(
-        orientation = Orientation.Horizontal,
-        reverseDirection = state.isRtl,
-        enabled = enabled,
-        interactionSource = interactionSource,
-        onDragStopped = { state.gestureEndAction() },
-        startDragImmediately = state.isDragging,
-        state = state
-    )
+    val drag = if (onlyThumbDraggable) {
+        Modifier.sliderThumbDragModifier(state, interactionSource, enabled)
+    } else {
+        Modifier.draggable(
+            orientation = Orientation.Horizontal,
+            reverseDirection = state.isRtl,
+            enabled = enabled,
+            interactionSource = interactionSource,
+            onDragStopped = { state.gestureEndAction() },
+            startDragImmediately = state.isDragging,
+            state = state
+        )
+    }
 
     Layout(
         {
@@ -303,9 +307,14 @@ private fun RangeSliderComponent(
 ) {
     state.isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
-    val pressDrag = Modifier.rangeSliderPressDragModifier(
-        state, startInteractionSource, endInteractionSource, enabled, onlyThumbDraggable
+    val press = if (onlyThumbDraggable) Modifier else Modifier.rangeSliderTapModifier(
+        state, startInteractionSource, endInteractionSource, enabled
     )
+    val drag = if (onlyThumbDraggable) {
+        Modifier.rangeSliderThumbDragModifier(state, startInteractionSource, endInteractionSource, enabled)
+    } else {
+        Modifier.rangeSliderDragModifier(state, startInteractionSource, endInteractionSource, enabled)
+    }
 
     Layout(
         {
@@ -336,7 +345,8 @@ private fun RangeSliderComponent(
         modifier = modifier
             .minimumInteractiveComponentSize()
             .requiredSizeIn(minWidth = thumbWidth, minHeight = trackHeight)
-            .then(pressDrag)
+            .then(press)
+            .then(drag)
     ) { measurables, constraints ->
         val startThumbPlaceable = measurables.fastFirst { it.layoutId == RangeSliderComponents.STARTTHUMB }.measure(constraints)
 
@@ -818,35 +828,183 @@ private fun Modifier.sliderTapModifier(
 }
 
 @Stable
-private fun Modifier.rangeSliderPressDragModifier(
+private fun Modifier.sliderThumbDragModifier(
+    state: SliderState, interactionSource: MutableInteractionSource, enabled: Boolean
+) = if (enabled) {
+    pointerInput(state, interactionSource) {
+        coroutineScope {
+            awaitEachGesture {
+                val down = awaitFirstDown(requireUnconsumed = false)
+                val interaction = DragInteraction.Start()
+                
+                // Wait for actual drag movement with slop detection
+                val drag = awaitSlop(down.id, down.type)
+                if (drag != null) {
+                    // Only set press offset when drag starts
+                    state.onPress(down.position)
+                    
+                    launch {
+                        interactionSource.emit(interaction)
+                    }
+                    
+                    // Apply initial drag delta
+                    val initialDelta = drag.second
+                    state.dispatchRawDelta(if (state.isRtl) -initialDelta else initialDelta)
+                    
+                    val success = horizontalDrag(drag.first.id) { change ->
+                        val dragAmount = change.positionChange().x
+                        val adjustedDelta = if (state.isRtl) -dragAmount else dragAmount
+                        state.dispatchRawDelta(adjustedDelta)
+                    }
+                    
+                    state.gestureEndAction()
+                    
+                    launch {
+                        interactionSource.emit(
+                            if (success) DragInteraction.Stop(interaction)
+                            else DragInteraction.Cancel(interaction)
+                        )
+                    }
+                }
+            }
+        }
+    }
+} else {
+    this
+}
+
+@Stable
+private fun Modifier.rangeSliderTapModifier(
     state: RangeSliderState,
     startInteractionSource: MutableInteractionSource,
     endInteractionSource: MutableInteractionSource,
-    enabled: Boolean,
-    onlyThumbDraggable: Boolean = false
+    enabled: Boolean
+): Modifier = if (enabled) {
+    pointerInput(state, startInteractionSource, endInteractionSource) {
+        val rangeSliderLogic = RangeSliderLogic(state, startInteractionSource, endInteractionSource)
+        coroutineScope {
+            awaitEachGesture {
+                val down = awaitFirstDown(requireUnconsumed = false)
+                val rawX = down.position.x
+                val posX = if (state.isRtl) state.totalWidth - rawX else rawX
+                
+                val interaction = DragInteraction.Start()
+                val compare = rangeSliderLogic.compareOffsets(posX)
+                val draggingStart = if (compare != 0) {
+                    compare < 0
+                } else {
+                    state.rawOffsetStart > posX
+                }
+                
+                rangeSliderLogic.captureThumb(
+                    draggingStart, posX, interaction, this@coroutineScope
+                )
+                
+                val finishInteraction = DragInteraction.Stop(interaction)
+                state.gestureEndAction(draggingStart)
+                launch {
+                    rangeSliderLogic.activeInteraction(draggingStart).emit(finishInteraction)
+                }
+            }
+        }
+    }
+} else {
+    this
+}
+
+@Stable
+private fun Modifier.rangeSliderDragModifier(
+    state: RangeSliderState,
+    startInteractionSource: MutableInteractionSource,
+    endInteractionSource: MutableInteractionSource,
+    enabled: Boolean
 ): Modifier = if (enabled) {
     pointerInput(startInteractionSource, endInteractionSource, state) {
         val rangeSliderLogic = RangeSliderLogic(state, startInteractionSource, endInteractionSource)
-        
-        if (onlyThumbDraggable) {
-            val thumbTouchRadius = 20f
+        coroutineScope {
+            awaitEachGesture {
+                val event = awaitFirstDown(requireUnconsumed = false)
+                val interaction = DragInteraction.Start()
+                var posX = if (state.isRtl) state.totalWidth - event.position.x else event.position.x
+                val compare = rangeSliderLogic.compareOffsets(posX)
+                var draggingStart = if (compare != 0) {
+                    compare < 0
+                } else {
+                    state.rawOffsetStart > posX
+                }
 
-            coroutineScope {
-                awaitEachGesture {
-                    val down = awaitFirstDown(requireUnconsumed = false)
-                    val rawX = down.position.x
-                    val posX = if (state.isRtl) state.totalWidth - rawX else rawX
-
-                    val startOffset = state.rawOffsetStart
-                    val endOffset = state.rawOffsetEnd
-
-                    val onStartThumb = abs(posX - startOffset) <= thumbTouchRadius
-                    val onEndThumb = abs(posX - endOffset) <= thumbTouchRadius
-
-                    if (!onStartThumb && !onEndThumb) {
-                        return@awaitEachGesture
+                awaitSlop(event.id, event.type)?.let {
+                    val slop = viewConfiguration.pointerSlop(event.type)
+                    val shouldUpdateCapturedThumb =
+                        abs(state.rawOffsetEnd - posX) < slop && abs(state.rawOffsetStart - posX) < slop
+                    if (shouldUpdateCapturedThumb) {
+                        val dir = it.second
+                        draggingStart = if (state.isRtl) dir >= 0f else dir < 0f
+                        posX += it.first.positionChange().x
                     }
+                }
 
+                rangeSliderLogic.captureThumb(
+                    draggingStart, posX, interaction, this@coroutineScope
+                )
+
+                val finishInteraction = try {
+                    val success = horizontalDrag(pointerId = event.id) {
+                        val deltaX = it.positionChange().x
+                        state.onDrag(
+                            draggingStart, if (state.isRtl) -deltaX else deltaX
+                        )
+                    }
+                    if (success) {
+                        DragInteraction.Stop(interaction)
+                    } else {
+                        DragInteraction.Cancel(interaction)
+                    }
+                } catch (e: CancellationException) {
+                    DragInteraction.Cancel(interaction)
+                }
+
+                state.gestureEndAction(draggingStart)
+                launch {
+                    rangeSliderLogic.activeInteraction(draggingStart).emit(finishInteraction)
+                }
+            }
+        }
+    }
+} else {
+    this
+}
+
+@Stable
+private fun Modifier.rangeSliderThumbDragModifier(
+    state: RangeSliderState,
+    startInteractionSource: MutableInteractionSource,
+    endInteractionSource: MutableInteractionSource,
+    enabled: Boolean
+): Modifier = if (enabled) {
+    pointerInput(startInteractionSource, endInteractionSource, state) {
+        val rangeSliderLogic = RangeSliderLogic(state, startInteractionSource, endInteractionSource)
+        val thumbTouchRadius = 20f
+
+        coroutineScope {
+            awaitEachGesture {
+                val down = awaitFirstDown(requireUnconsumed = false)
+                val rawX = down.position.x
+                val posX = if (state.isRtl) state.totalWidth - rawX else rawX
+
+                val startOffset = state.rawOffsetStart
+                val endOffset = state.rawOffsetEnd
+
+                val onStartThumb = abs(posX - startOffset) <= thumbTouchRadius
+                val onEndThumb = abs(posX - endOffset) <= thumbTouchRadius
+
+                if (!onStartThumb && !onEndThumb) {
+                    return@awaitEachGesture
+                }
+
+                // Wait for actual drag movement with slop detection
+                val drag = awaitSlop(down.id, down.type)
+                if (drag != null) {
                     val distanceToStart = abs(posX - startOffset)
                     val distanceToEnd = abs(posX - endOffset)
                     val draggingStart = when {
@@ -863,15 +1021,17 @@ private fun Modifier.rangeSliderPressDragModifier(
                     }
 
                     val startInteraction = DragInteraction.Start()
-                    rangeSliderLogic.captureThumb(
-                        draggingStart,
-                        posX,
-                        startInteraction,
-                        this@coroutineScope
-                    )
+                    
+                    // Only capture thumb after drag starts
+                    val initialDelta = drag.second
+                    state.onDrag(draggingStart, if (state.isRtl) -initialDelta else initialDelta)
+                    
+                    launch {
+                        rangeSliderLogic.activeInteraction(draggingStart).emit(startInteraction)
+                    }
 
                     val finishInteraction = try {
-                        val success = horizontalDrag(pointerId = down.id) { change ->
+                        val success = horizontalDrag(pointerId = drag.first.id) { change ->
                             val deltaX = change.positionChange().x
                             val adjustedDelta = if (state.isRtl) -deltaX else deltaX
                             state.onDrag(draggingStart, adjustedDelta)
@@ -887,56 +1047,6 @@ private fun Modifier.rangeSliderPressDragModifier(
 
                     state.gestureEndAction(draggingStart)
 
-                    launch {
-                        rangeSliderLogic.activeInteraction(draggingStart).emit(finishInteraction)
-                    }
-                }
-            }
-        } else {
-            coroutineScope {
-                awaitEachGesture {
-                    val event = awaitFirstDown(requireUnconsumed = false)
-                    val interaction = DragInteraction.Start()
-                    var posX = if (state.isRtl) state.totalWidth - event.position.x else event.position.x
-                    val compare = rangeSliderLogic.compareOffsets(posX)
-                    var draggingStart = if (compare != 0) {
-                        compare < 0
-                    } else {
-                        state.rawOffsetStart > posX
-                    }
-
-                    awaitSlop(event.id, event.type)?.let {
-                        val slop = viewConfiguration.pointerSlop(event.type)
-                        val shouldUpdateCapturedThumb =
-                            abs(state.rawOffsetEnd - posX) < slop && abs(state.rawOffsetStart - posX) < slop
-                        if (shouldUpdateCapturedThumb) {
-                            val dir = it.second
-                            draggingStart = if (state.isRtl) dir >= 0f else dir < 0f
-                            posX += it.first.positionChange().x
-                        }
-                    }
-
-                    rangeSliderLogic.captureThumb(
-                        draggingStart, posX, interaction, this@coroutineScope
-                    )
-
-                    val finishInteraction = try {
-                        val success = horizontalDrag(pointerId = event.id) {
-                            val deltaX = it.positionChange().x
-                            state.onDrag(
-                                draggingStart, if (state.isRtl) -deltaX else deltaX
-                            )
-                        }
-                        if (success) {
-                            DragInteraction.Stop(interaction)
-                        } else {
-                            DragInteraction.Cancel(interaction)
-                        }
-                    } catch (e: CancellationException) {
-                        DragInteraction.Cancel(interaction)
-                    }
-
-                    state.gestureEndAction(draggingStart)
                     launch {
                         rangeSliderLogic.activeInteraction(draggingStart).emit(finishInteraction)
                     }

@@ -65,6 +65,7 @@ fun SliderSample() {
             Section("Range Sliders") { RangeSliderExamples() }
             Section("Disabled Sliders") { DisabledSliderExamples() }
             Section("Customized Sliders") { CustomizedSliderExamples() }
+            Section("Thumb-Only Draggable Sliders") { ThumbOnlyDraggableExamples() }
         }
     }
 }
@@ -164,6 +165,38 @@ private fun CustomizedSliderExamples() {
             thumbHeight = 32.dp,
             trackHeight = 10.dp,
             thumbTrackGap = 6.dp
+        )
+    }
+}
+
+// Examples with onlyThumbDraggable parameter
+@Composable
+private fun ThumbOnlyDraggableExamples() {
+    val thumbOnlyState = remember { SliderState(0.3f) }
+    val regularState = remember { SliderState(0.3f) }
+    val thumbOnlyRangeState = remember { RangeSliderState(0.2f, 0.7f) }
+
+    LabeledSlider("Thumb-Only Draggable (can't click track to move)") {
+        BasicSlider(
+            state = thumbOnlyState,
+            colors = SliderPresets.Primary,
+            onlyThumbDraggable = true
+        )
+    }
+
+    LabeledSlider("Regular Slider (can click anywhere)") {
+        BasicSlider(
+            state = regularState,
+            colors = SliderPresets.Primary,
+            onlyThumbDraggable = false
+        )
+    }
+
+    LabeledSlider("Thumb-Only Range Slider") {
+        BasicRangeSlider(
+            state = thumbOnlyRangeState,
+            colors = SliderPresets.Secondary,
+            onlyThumbDraggable = true
         )
     }
 }
